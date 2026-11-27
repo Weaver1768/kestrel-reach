@@ -43,14 +43,14 @@ export function configureShot(name, app) {
   if (name === 'cover') {
     missions.begin(MISSIONS[0], state, enemies);
     // Run down the canyon toward the central gate, the hoop dead ahead.
-    const gateX = 950, gateZ = canyonCenter(gateX);
+    const gateX = -1250, gateZ = canyonCenter(gateX);
     // Approach along the canyon floor with the hoop exactly on the nose.
     const x = gateX + 320, z = canyonCenter(x);
     const heading = Math.atan2(gateX - x, -(gateZ - z));
     pose(state, x, terrain.heightAt(x, z) + 84, z, heading, 0.015, -8 * Math.PI / 180, 150);
     configureSortie(state, terrain, { missionTime: 12, fuel: 2180, throttle: 0.8, missiles: 4, bombs: 2, gunRounds: 400 });
     state.agl = 84; state.controls.roll = -0.22;
-    setCamera(camera, state, 31, 3.5, 15, 84, 52);
+    setCamera(camera, state, 33, 4, 12, 82, 52);
     const forward = forwardOf(state);
     camera.lookAt(state.position.clone().addScaledVector(forward, 84));
     app.shotTarget = { position: new THREE.Vector3(gateX, terrain.heightAt(gateX, gateZ) + 66, gateZ) };
