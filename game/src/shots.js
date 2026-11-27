@@ -43,18 +43,16 @@ export function configureShot(name, app) {
   if (name === 'cover') {
     missions.begin(MISSIONS[0], state, enemies);
     // Run down the canyon toward the central gate, the hoop dead ahead.
-    const gateX = -150, gateZ = canyonCenter(gateX);
-    const slope = 350 * 0.00062 * Math.cos(gateX * 0.00062) + 0.11;
-    const length = Math.hypot(1, slope);
-    const dirX = -1 / length, dirZ = -slope / length;
-    const heading = Math.atan2(dirX, -dirZ);
-    const x = gateX - dirX * 320, z = gateZ - dirZ * 320;
-    pose(state, x, terrain.heightAt(x, z) + 84, z, heading, 0.015, -12 * Math.PI / 180, 150);
+    const gateX = 950, gateZ = canyonCenter(gateX);
+    // Approach along the canyon floor with the hoop exactly on the nose.
+    const x = gateX + 320, z = canyonCenter(x);
+    const heading = Math.atan2(gateX - x, -(gateZ - z));
+    pose(state, x, terrain.heightAt(x, z) + 84, z, heading, 0.015, -8 * Math.PI / 180, 150);
     configureSortie(state, terrain, { missionTime: 12, fuel: 2180, throttle: 0.8, missiles: 4, bombs: 2, gunRounds: 400 });
     state.agl = 84; state.controls.roll = -0.22;
-    setCamera(camera, state, 36, 6, 7, 34, 46);
+    setCamera(camera, state, 34, 7, 8, 40, 46);
     const forward = forwardOf(state);
-    camera.lookAt(state.position.clone().addScaledVector(forward, 34));
+    camera.lookAt(state.position.clone().addScaledVector(forward, 44));
     app.shotTarget = { position: new THREE.Vector3(gateX, terrain.heightAt(gateX, gateZ) + 66, gateZ) };
   } else if (name === 'cockpit') {
     missions.begin(MISSIONS[0], state, enemies);
