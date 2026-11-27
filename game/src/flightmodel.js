@@ -12,9 +12,11 @@ const euler = new THREE.Euler(0, 0, 0, 'YXZ');
 
 export function createFlightState(terrain) {
   const p = terrain.airbase;
+  // Sit on the runway surface where the jet actually spawns, so the sortie never opens with a drop.
+  const spawnX = p.x - 760, spawnY = p.y + 2.4;
   const state = {
-    position: new THREE.Vector3(p.x - 760, p.y + 3, p.z),
-    previous: new THREE.Vector3(p.x - 760, p.y + 3, p.z),
+    position: new THREE.Vector3(spawnX, spawnY, p.z),
+    previous: new THREE.Vector3(spawnX, spawnY, p.z),
     velocity: new THREE.Vector3(),
     orientation: new THREE.Quaternion(),
     previousOrientation: new THREE.Quaternion(),
@@ -139,10 +141,11 @@ export function stepFlight(state, input, terrain, dt, effects = null) {
   if (state.gear && agl < 2.8 && input.brake) v.x *= 1 - dt * 0.8;
   p.addScaledVector(v, dt);
 
-  const ground = terrain.heightAt(p.x, p.z);
+  const nearRunway = Math.abs(p.x - terrain.airbase.x) < 950 && Math.abs(p.z - terrain.airbase.z) < 31;
+  // On the strip the pavement, not the heightfield beneath it, is the surface the jet rolls on.
+  const ground = nearRunway ? Math.max(terrain.heightAt(p.x, p.z), terrain.airbase.y + 1.35) : terrain.heightAt(p.x, p.z);
   if (p.y <= ground + 2.2) {
     const vertical = v.y;
-    const nearRunway = Math.abs(p.x - terrain.airbase.x) < 950 && Math.abs(p.z - terrain.airbase.z) < 31;
     const gearTouch = state.gear && nearRunway && Math.abs(state.bank) < 0.28 && Math.abs(state.pitch) < 0.22;
     if (vertical < -1.2 && gearTouch && !state.lastTouchdown) {
       state.landed = true; state.landing.vertical = -vertical; state.landing.center = Math.abs(p.z - terrain.airbase.z);
