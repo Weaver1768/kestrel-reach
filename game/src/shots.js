@@ -67,12 +67,16 @@ export function configureShot(name, app) {
     app.shotTarget = { position: new THREE.Vector3(thresholdX, AIRBASE.y + 2, AIRBASE.z) };
   } else if (name === 'strike') {
     missions.begin(MISSIONS[2], state, enemies);
-    const x = 1900, z = 640, y = terrain.heightAt(x, z) + 260;
-    const heading = Math.atan2(2270 - x, -(790 - z));
+    // Run in on the mesa radar site from 700 m out, the target dead ahead.
+    const site = terrain.radar.position;
+    const bearing = new THREE.Vector3(-0.75, 0, -0.66).normalize();
+    const x = site.x + bearing.x * 700, z = site.z + bearing.z * 700;
+    const y = Math.max(terrain.heightAt(x, z) + 170, site.y + 130);
+    const heading = Math.atan2(site.x - x, -(site.z - z));
     pose(state, x, y, z, heading, 0, -0.06, 192);
     configureSortie(state, terrain, { missionTime: 18, fuel: 1740, throttle: 0.83, missiles: 3, bombs: 2, gunRounds: 360, weapon: 'bomb', warnings: ['MISSILE INBOUND'] });
-    state.agl = 260; weapons.forceWeapon('bomb');
-    setCamera(camera, state, 46, 13, 10, 110, 48);
+    state.agl = 170; weapons.forceWeapon('bomb');
+    setCamera(camera, state, 40, 9, 10, 520, 50);
     app.shotTarget = terrain.radar;
     effects.smoke(new THREE.Vector3(2250, terrain.heightAt(2250, 790) + 1.5, 790), 2.8, 3);
   } else {
@@ -84,7 +88,7 @@ export function configureShot(name, app) {
     state.agl = 460; state.controls.roll = -0.48;
     const bomber = enemies.targets()[0];
     if (bomber) {
-      bomber.position.set(x + 150, state.position.y - 22, z + 26); bomber.health = 0.52; bomber.smoke = 1;
+      bomber.position.set(x + 300, state.position.y + 18, z + 130); bomber.health = 0.52; bomber.smoke = 1;
       for (let i = 0; i < 9; i++) effects.smoke(bomber.position.clone().add(new THREE.Vector3(18 + i * 18, 2 + i * 3, 5)), 13 + i, 7 - i * 0.4);
       const right = new THREE.Vector3(1, 0, 0).applyQuaternion(state.orientation);
       const forward = forwardOf(state);

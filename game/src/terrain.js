@@ -185,8 +185,13 @@ function landmarks(scene, random) {
   const radar = new THREE.Group(); radar.position.set(mx - 180, my + 18, mz - 120); scene.add(radar);
   const dish = new THREE.Mesh(new THREE.SphereGeometry(10, 12, 7, 0, Math.PI * 2, 0, Math.PI * 0.52), new THREE.MeshStandardMaterial({ color: 0xb8b7ac, side: THREE.DoubleSide })); dish.rotation.x = Math.PI / 2; dish.position.y = 20; radar.add(dish);
   const mast = new THREE.Mesh(new THREE.CylinderGeometry(3, 4, 24, 6), new THREE.MeshStandardMaterial({ color: 0x595b58 })); mast.position.y = 7; radar.add(mast);
-  box(scene, mx + 220, my + 6, mz + 190, 320, 1.5, 24, 0x554c3e);
-  for (let i = 0; i < 4; i++) box(scene, mx + 480 + (i % 2) * 90, my + 7, mz - 150 + Math.floor(i / 2) * 110, 54, 12, 26, 0x676254);
+  // Each prop sits on the ground under itself, so none hangs over the mesa edge.
+  const slabX = mx + 220, slabZ = mz + 190;
+  box(scene, slabX, baseHeight(slabX, slabZ) + 1.5, slabZ, 320, 1.5, 24, 0x554c3e);
+  for (let i = 0; i < 4; i++) {
+    const bx = mx + 480 + (i % 2) * 90, bz = mz - 150 + Math.floor(i / 2) * 110;
+    box(scene, bx, baseHeight(bx, bz) + 6, bz, 54, 12, 26, 0x676254);
+  }
   const sam = new THREE.Group(); sam.position.set(mx + 520, my + 10, mz - 205); scene.add(sam);
   const base = new THREE.Mesh(new THREE.CylinderGeometry(13, 16, 12, 8), new THREE.MeshStandardMaterial({ color: 0x52604f })); sam.add(base);
   const tube = new THREE.Mesh(new THREE.CylinderGeometry(4, 5, 52, 7), new THREE.MeshStandardMaterial({ color: 0x616b59 })); tube.rotation.z = -0.72; tube.position.set(12, 17, 0); sam.add(tube);
