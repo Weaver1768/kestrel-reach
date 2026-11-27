@@ -128,8 +128,8 @@ function runway(scene) {
     const paint = document.createElement('canvas'); paint.width = 128; paint.height = 64;
     const paintCtx = paint.getContext('2d'); paintCtx.fillStyle = '#e4deca'; paintCtx.font = 'bold 52px monospace'; paintCtx.textAlign = 'center'; paintCtx.textBaseline = 'middle'; paintCtx.fillText(end < 0 ? '09' : '27', 64, 32);
     const paintTexture = new THREE.CanvasTexture(paint); paintTexture.colorSpace = THREE.SRGBColorSpace;
-    const number = new THREE.Mesh(new THREE.PlaneGeometry(36, 16), new THREE.MeshBasicMaterial({ map: paintTexture, transparent: true, side: THREE.DoubleSide }));
-    number.rotation.x = -Math.PI / 2; number.position.set(x + end * 700, y + 1.5, z); scene.add(number);
+    const number = new THREE.Mesh(new THREE.PlaneGeometry(18, 8), new THREE.MeshBasicMaterial({ map: paintTexture, transparent: true, side: THREE.DoubleSide }));
+    number.rotation.x = -Math.PI / 2; number.position.set(x + end * 860, y + 1.5, z); scene.add(number);
   }
 }
 
