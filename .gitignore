@@ -1,0 +1,5 @@
+out/
+out2/
+*.log
+.chrome-shot-cover/
+node_modules/
