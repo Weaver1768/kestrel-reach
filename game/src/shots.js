@@ -50,9 +50,9 @@ export function configureShot(name, app) {
     pose(state, x, terrain.heightAt(x, z) + 84, z, heading, 0.015, -8 * Math.PI / 180, 150);
     configureSortie(state, terrain, { missionTime: 12, fuel: 2180, throttle: 0.8, missiles: 4, bombs: 2, gunRounds: 400 });
     state.agl = 84; state.controls.roll = -0.22;
-    setCamera(camera, state, 34, 7, 8, 40, 46);
+    setCamera(camera, state, 31, 3.5, 15, 84, 52);
     const forward = forwardOf(state);
-    camera.lookAt(state.position.clone().addScaledVector(forward, 44));
+    camera.lookAt(state.position.clone().addScaledVector(forward, 84));
     app.shotTarget = { position: new THREE.Vector3(gateX, terrain.heightAt(gateX, gateZ) + 66, gateZ) };
   } else if (name === 'cockpit') {
     missions.begin(MISSIONS[0], state, enemies);
